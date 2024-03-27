@@ -5,7 +5,6 @@ const multer = require("multer");
 const XLSX = require("xlsx");
 const fs = require("fs");
 const path = require("path");
-const readline = require("readline");
 
 const upload = multer({ dest: "public/uploads/" });
 
@@ -16,16 +15,7 @@ let isLocalFileReady = false;
 let isDownloadReady = false;
 let isDonateReady = false;
 let isexcel = false;
-let iscsv = false;
 //Routes
-const dataA = [];
-var Unique_1="custom_var1"
-var Merge_1="phone_number";
-var Unique_2="custom_var1"
-var Merge_2="phone_number";
-
-
-
 router.get("/", (req, res) => {
   res.render("index", {
     successMessage: req.flash("success"),
@@ -39,7 +29,6 @@ router.get("/", (req, res) => {
     isLocalFileReady,
     isDownloadReady,
     isexcel,
-    iscsv,
     isDonateReady,
   });
   totalBankRows = 0;
@@ -52,16 +41,14 @@ router.post("/uploadBank", upload.single("file"), (req, res) => {
     res.status(400).send("No file uploaded.");
     return;
   }
-   Unique_1=req.body.Unique1;
-   Merge_1=req.body.Merge1;
 
   const filePath = req.file.path;
   // Check if the file has an Excel extension
   const fileExtension = path.extname(req.file.originalname).toLowerCase();
-  if (fileExtension !== ".csv") {
+  if (fileExtension !== ".xlsx" && fileExtension !== ".xls") {
     // Delete the uploaded file
     fs.unlinkSync(filePath);
-    res.render("index", { error: "only csv files are supported!" });
+    // res.render("index", { error: "only excel files are supported!" });
     res.redirect("/");
     return;
   }
@@ -81,39 +68,20 @@ router.post("/uploadBank", upload.single("file"), (req, res) => {
     fs.renameSync(filePath, newFilePath);
   }
 
-// Parse CSV file to JSON array
+  const workbook = XLSX.readFile(newFilePath);
+  const sheetName = workbook.SheetNames[0];
+  const sheetData = XLSX.utils.sheet_to_json(workbook.Sheets[sheetName]);
 
-const rl = readline.createInterface({
-  input: fs.createReadStream(newFilePath),
-  crlfDelay: Infinity, // Handle different line endings
-});
-
-let headers;
-rl.on("line", (line) => {
-  const row = line.split(",");
-  if (!headers) {
-    headers = row;
-  } else {
-    dataA.push(Object.fromEntries(row.map((value, index) => [headers[index], value])));
-  }
-});
-
-rl.on("close", () => {
-  const rowCount = dataA.length;
+  const rowCount = sheetData.length; // Get the total number of rows
   totalBankRows += rowCount;
   isBankFileReady = true;
-  iscsv=true;
-});
 
   // console.log("Total rows: ", rowCount);
 
-  req.flash("success", "CSV File uploaded successfully");
+  req.flash("success", "First File uploaded successfully");
   res.redirect("/");
   // Do something with the sheet data
 });
-
-
-
 
 //upload excel file local
 router.post("/uploadLocal", upload.single("file"), (req, res) => {
@@ -121,10 +89,6 @@ router.post("/uploadLocal", upload.single("file"), (req, res) => {
     res.status(400).send("No file uploaded.");
     return;
   }
-
-  Unique_2=req.body.Unique2;
-  Merge_2=req.body.Merge2;
-  
 
   const filePath = req.file.path;
   // Check if the file has an Excel extension
@@ -158,9 +122,9 @@ router.post("/uploadLocal", upload.single("file"), (req, res) => {
   const rowCount = sheetData.length; // Get the total number of rows
   totalLocalRows += rowCount;
   isLocalFileReady = true;
-  isexcel=true
+
   // console.log(sheetData);
-  req.flash("successLocal", "Excel File uploaded successfully");
+  req.flash("successLocal", "Local File uploaded successfully");
   res.redirect("/");
 });
 
@@ -169,36 +133,60 @@ router.post("/uploadLocal", upload.single("file"), (req, res) => {
 
 
 const removeDups = () => {
-  // Read the csv files
+  // Read the Excel files
+  const workbookA = XLSX.readFile("public/uploads/bankbook.xlsx");
+  const workbookB = XLSX.readFile("public/uploads/localbook.xlsx");
+
+   // Get the first sheet of each workbook
+   const sheetA = workbookA.Sheets[workbookA.SheetNames[0]];
+   const sheetB = workbookB.Sheets[workbookB.SheetNames[0]];
+ 
+   // Convert sheet data to JSON format
+   const dataA = XLSX.utils.sheet_to_json(sheetA);
+   const dataB = XLSX.utils.sheet_to_json(sheetB);
 
 
-  if(iscsv){
 
-    const uniquePhonesA = new Set();
-    const mergedDataA = [];
+  const uniquePhones = new Set();
+  const mergedData = [];
 
   for (const row of dataA) {
-    const phone = row[Unique_1];
+    const phone = row["phone"];
 
-    if (!uniquePhonesA.has(phone)) {
-      uniquePhonesA.add(phone);
-      mergedDataA.push(row);
+    if (!uniquePhones.has(phone)) {
+      uniquePhones.add(phone);
+      mergedData.push(row);
     } else {
       // Find the existing row with the same phone and merge names
-      const existingRowIndex = mergedDataA.findIndex((r) => r[Unique_1] === phone);
-      mergedDataA[existingRowIndex][Merge_1] += " and " + row[Merge_1];
+      const existingRowIndex = mergedData.findIndex((r) => r["phone"] === phone);
+      mergedData[existingRowIndex]["custom_var1"] += " and " + row["custom_var1"];
     }
   }
 
-  dataA.length=0;
+  // console.log(finalDataA);
+  // console.log(finalDataB);
+  // console.log("-----------");
+  // console.log(uniqueCrA);
+  // console.log(uniqueCrB);
+
+  // Merge finalDataA with uniqueCrA
+  const mergedDataA = mergedData
+
+  // Merge finalDataB with uniqueCrB
+  const mergedDataB = mergedData
+
+  // console.log("===============");
+  
+  // console.log(mergedDataB);
+
+  // Generate CSV content
 
 
-  const csvContent = [
-    Object.keys(mergedDataA[0]).join(","), // Header row
-    ...mergedDataA.map((row) => Object.values(row).join(",")), // Join object values
-  ].join("\n");
 
-
+const csvContent = [
+  Object.keys(mergedDataB[0]).join(","), // Create header row from first row's keys
+  mergedDataB.map((row) => Object.values(row).join(",")), // Map data rows
+].join("\n");
 
 // Write CSV file
 fs.writeFile("public/uploads/result.csv", csvContent, (err) => {
@@ -209,109 +197,32 @@ if (err) {
 }
 });
 
-
-  }
-  
-
-
-
-
-
- if(isexcel){
-   
-
-  const workbookB = XLSX.readFile("public/uploads/localbook.xlsx");
-
-   // Get the first sheet of each workbook
-  
-   const sheetB = workbookB.Sheets[workbookB.SheetNames[0]];
- 
-   // Convert sheet data to JSON format
-   
-   const dataB = XLSX.utils.sheet_to_json(sheetB);
-
-  const uniquePhonesB = new Set();
-  const mergedDataB = [];
-
-  for (const row of dataB) {
-    console.log(Unique2);
-    const phone = row[Unique2];
-
-    if (!uniquePhonesB.has(phone)) {
-      uniquePhonesB.add(phone);
-      mergedDataB.push(row);
-    } else {
-      // Find the existing row with the same phone and merge names
-      const existingRowIndex = mergedDataB.findIndex((r) => r[Unique_2] === phone);
-      mergedDataB[existingRowIndex][Merge_2] += " and " + row[Merge_2];
-    }
-  }
-
-
-
-
-  const csvContentB = [
-    Object.keys(mergedDataB[0]).join(","), // Header row
-      ...mergedDataB.map((row) => Object.values(row).join(",")), // Join object values
-    ].join("\n");
-  
-  // Write CSV file
-  fs.writeFile("public/uploads/result2.csv", csvContentB, (err) => {
-  if (err) {
-    console.error("Error writing CSV file:", err);
-  } else {
-    console.log("CSV2 file written successfully!");
-  }
-  });
-  
-  // console.log(finalDataB);
-  // console.log("-----------");
-  // console.log(uniqueCrA);
-  // console.log(uniqueCrB);
-
-  // Merge finalDataA with uniqueCrA
- 
-
-  // Merge finalDataB with uniqueCrB
-
-  // Generate CSV content
-
   // Create a new workbook
   const resultWorkbook = XLSX.utils.book_new();
 
   // Convert uniqueDataA to worksheet and add it to the workbook
+  const worksheetA = XLSX.utils.json_to_sheet(mergedDataA);
+  XLSX.utils.book_append_sheet(resultWorkbook, worksheetA, "bank_sheet");
+
+  // Convert uniqueDataB to worksheet and add it to the workbook
   const worksheetB = XLSX.utils.json_to_sheet(mergedDataB);
-  XLSX.utils.book_append_sheet(resultWorkbook, worksheetB, "bank_sheet");
+  XLSX.utils.book_append_sheet(resultWorkbook, worksheetB, "local_book");
 
   // Write the result workbook to a new Excel file
   XLSX.writeFile(resultWorkbook, "public/uploads/result.xlsx");
-
-
-
-  
-
- }
-
-
-
 };
-
-
 
 const cleanUp = () => {
   isBankFileReady = false;
   isLocalFileReady = false;
   isDownloadReady = false;
   isexcel=false;
-  iscsv=false;
 
   // Optional: Remove the original files if desired
-  //fs.unlinkSync(path.join("public", "uploads", "bankbook.xlsx"));
-  //fs.unlinkSync(path.join("public", "uploads", "localbook.xlsx"));
-  //fs.unlinkSync(path.join("public", "uploads", "result.csv"));
-  //fs.unlinkSync(path.join("public", "uploads", "result.xlsx"));
-  //fs.unlinkSync(path.join("public", "uploads", "result2.csv"));
-
+  fs.unlinkSync(path.join("public", "uploads", "bankbook.xlsx"));
+  fs.unlinkSync(path.join("public", "uploads", "localbook.xlsx"));
+  fs.unlinkSync(path.join("public", "uploads", "result.xlsx"));
+  fs.unlinkSync(path.join("public", "uploads", "result.csv"));
 };
 
 router.get("/removeDups", (req, res) => {
@@ -329,11 +240,9 @@ router.get("/download", (req, res) => {
   res.download(file, "result.xlsx", (err) => {
     if (err) {
       req.flash("fileErrMessage", "Failed to download the file");
-      
     } else {
       req.flash("fileSuccessMessage", "File downloaded successfully!");
       cleanUp(); // Perform any necessary clean-up actions after the download
-      
     }
 
     
@@ -354,28 +263,7 @@ router.get("/downloadcsv", (req, res) => {
       req.flash("fileErrMessage", "Failed to download the file");
     } else {
       req.flash("fileSuccessMessage", "File downloaded successfully!");
-     cleanUp(); // Perform any necessary clean-up actions after the download
-    }
-
-    
-
-    // Redirect to the desired route using JavaScript
-  });
-  
-});
-
-
-  
-router.get("/downloadXcsv", (req, res) => {
-  const file= "public/uploads/result2.csv";
-  res.download(file, "result2.csv", (err) => {
-    if (err) {
-      req.flash("fileErrMessage", "Failed to download the file");
-      console.log("fail");
-    } else {
-      req.flash("fileSuccessMessage", "File downloaded successfully!");
       cleanUp(); // Perform any necessary clean-up actions after the download
-      console.log("nfail");
     }
 
     

@@ -1,8 +1,19 @@
-<div class="author">
-    <h1 class="author__heading mb-5">DUPLICATION REMOVER</h1>
+<div id="loader">
+  <div class = "centered">
+    <div class = "blob-1"></div>
+    <div class = "blob-2"></div>
+  </div>
 </div>
 
-<div class="container">
+
+<div class="author">
+    <h1 class="author__heading mb-5">VPRO DATA MERGER</h1>
+    <p class="mb-3" style="color: white;">Eliminate Duplication, Clean Your Data with Ease. Merge duplicate rows in Excel or CSV files quickly and accurately. Get a streamlined, accurate CSV output in seconds.
+
+    </p>
+</div>
+
+<div class="container" id="containermain">
 
   <% if (error !== null) { %>
   <div class="alert alert-primary" role="alert">
@@ -11,21 +22,51 @@
     <% } %>
     </div>
 
-  
- 
-  
 
-  <div class="card text-bg-primary mb-3">
-    <div class="card-header">Step 1</div>
-    <div class="card-body">
-      <h5 class="card-title">Upload File</h5>
-      <p class="card-text">Upload your excel file</p>
-        <form action="/uploadBank" method="post" enctype="multipart/form-data">
-          <input type="file" name="file" accept=".xlsx,.xls, .jpg" required>
-          <input type="submit" value="Upload">
-        </form>
-        </div>
-  </div>
+    <div class="card mb-3 step1">
+      <div class="card-header">CSV Data Merger</div>
+      <div class="card-body">
+        <h5 class="card-title">Import CSV File</h5>
+        <p class="card-text p1">Import your CSV file for merging duplicate rows</p>
+        
+        <br>
+          <div class="row">
+            <div class="col-sm-offset-4 col-sm-4 form-group">
+              
+            </div><!--form-group-->
+          </div><!--row-->
+          <div>
+          <div class="row uploadDoc">
+            <div class="col-sm-3">
+              <div class="p1"><!--error-->
+              <form action="/uploadBank" method="post" enctype="multipart/form-data">
+              <div class="">
+                <div class="uploader">                  
+                  <div class="file-select">
+                    <input type="file" name="file" id="chooseFile" accept=".csv" required>
+                  </div>
+                </div>
+              </div>
+             
+              </div><!-- btn-orange -->
+            </div><!-- col-3 -->
+            <div class="col-sm-8">
+                <label for="Unique1">Unique Column:</label>
+                <input type="text" name="Unique1" class="form-control" placeholder="eg: phone_number" value="phone_number">
+                <label for="Merge1">Column to Merge:</label>
+                <input type="text" name="Merge1" class="form-control" placeholder="eg: custom_var1" value="custom_var1">
+              </div><!--col-8-->
+
+           
+          </div><!--row-->
+          </div><!--uploader-->
+          <div class="text-center">
+          <input type="submit" value="Process">
+          </form>
+          </div>
+          
+      </div>
+    </div>
 
   
   <% if (successMessage.length > 0) { %>
@@ -40,23 +81,88 @@
           <p>Total Rows Found: <%= totalBankRows %></p>
         </div>
         <% } %>
+        
+
+        
 
   </div>
   <% } %> 
 
+  <% if (isBankFileReady) { %>
+  
+
+    <div class="card mb-3 step2">
+    <div class="card-header">Merge Criteria</div>
+      <div class="card-body">Choose the columns that define duplicate rows</h5>
+        <p class="card-text">Decide how to combine data from duplicate rows. Generate a new, organized CSV file with duplicates merged.
+
+        </p>
+    
+        <button id="btn_remove" type="button" class="btn btn-light">DOWNLOAD</button>
+        
+        <% if (isDownloadReady) { %>
+           
+          <button id="btn_downloadcsv" type="button" class="btn btn-light">Save As CSV</button>
+    
+          <a href="https://vpro.leadsndeals.in/whatsapp/subscriber/manager" target="_blank" id="btn_donate" style="color: white; background-image: radial-gradient( circle 815px at 23.4% -21.8%,  rgba(9,29,85,1) 0.2%, rgba(0,0,0,1) 100.2% );
+          " class="btn throbbing-link">VPRO BROADCAST ➤</a>
+    
+        <% } %>
+    
+      </div>
+    </div>
+    <% } %>
 
 
-  <div class="card text-bg-warning mb-3">
-    <div class="card-header">Step 2</div>
+
+  <div class="card mb-3 step1" >
+    <div class="card-header">EXCEL Data Merger </div>
     <div class="card-body">
-      <h5 class="card-title">Upload Local File</h5>
-      <p class="card-text">Upload excel file </p>
-      <form action="/uploadLocal" method="post" enctype="multipart/form-data">
-        <input type="file" name="file" accept=".xlsx,.xls, .jpg" required>
-        <input type="submit" value="Upload">
-      </form>
+
+
+      <div class="card-body">
+        <h5 class="card-title">Import EXCEL File</h5>
+        <p class="card-text p1">Import your Xlsx/Xls file for merging duplicate rows</p>
+        
+        <br>
+          <div class="row">
+            <div class="col-sm-offset-4 col-sm-4 form-group">
+              
+            </div><!--form-group-->
+          </div><!--row-->
+          <div>
+          <div class="row uploadDoc">
+            <div class="col-sm-3">
+              <div class="p1"><!--error-->
+              <form action="/uploadLocal" method="post" enctype="multipart/form-data">
+              <div class="">
+                <div class="uploader">                  
+                  <div class="file-select">
+                    <input type="file" name="file" id="chooseFile" accept=".xlsx,.xls" required>
+                  </div>
+                </div>
+              </div>
+             
+              </div><!-- btn-orange -->
+            </div><!-- col-3 -->
+            <div class="col-sm-8">
+                <label for="Unique1">Unique Column:</label>
+                <input type="text" name="Unique2" class="form-control" placeholder="eg: phone_number" value="phone_number">
+                <label for="Merge1">Column to Merge:</label>
+                <input type="text" name="Merge2" class="form-control" placeholder="eg: custom_var1" value="custom_var1">
+              </div><!--col-8-->
+
+           
+          </div><!--row-->
+          </div><!--uploader-->
+          <div class="text-center">
+          <input type="submit" value="Process">
+          </form>
+          </div>
+          
     </div>
-    </div>
+  </div>
+</div>
 
 
 <% if (localMessage.length > 0) { %>
@@ -75,28 +181,36 @@
 </div>
 <% } %> 
 
-<% if (isLocalFileReady && isBankFileReady) { %>
+<% if (isLocalFileReady) { %>
  
 
-<div class="card text-bg-info mb-3">
-  <div class="card-header">Step 3</div>
-  <div class="card-body">
-    <h5 class="card-title">Remove duplicates & Download the result file</h5>
-    <p class="card-text">remove the duplicates and download your result file. The result file will contain 02 sheets. one will contain leftover records form your bank sheet, and the other sheet will contain leftover results from your local/accounts sheet.
-    </p>
-
-    <button id="btn_remove" type="button" class="btn btn-light">Remove Duplicates</button>
+  <div class="card mb-3 step2">
+    <div class="card-header">Merge Criteria</div>
+      <div class="card-body">Choose the columns that define duplicate rows</h5>
+        <p class="card-text">Decide how to combine data from duplicate rows. Generate a new, organized CSV file with duplicates merged.
+          
+        </p>
     
-    <% if (isDownloadReady) { %>
-     
-    
-    <button id="btn_download" type="button" class="btn btn-light">Download File</button>
-    <a href="https://forms.gle/knLqTQMz246YP1gw6" target="_blank" id="btn_donate" class="btn btn-warning throbbing-link">Donate to me</a>
-    <% } %>
+  
+      <button id="btn_remove2" type="button" class="btn btn-light">DOWNLOAD</button>
+      
+      <% if (isDownloadReady) { %>
+       
+        
+        <button id="btn_downloadXcsv" type="button" class="btn btn-light">Save As CSV</button>
+  
+        <button id="btn_download" type="button" class="btn btn-light">Save As XLSX</button>
+  
+        <a href="https://vpro.leadsndeals.in/whatsapp/subscriber/manager" target="_blank" id="btn_donate" style="color: white; background-image: radial-gradient( circle 815px at 23.4% -21.8%,  rgba(9,29,85,1) 0.2%, rgba(0,0,0,1) 100.2% );
+        " class="btn throbbing-link">VPRO BROADCAST ➤</a>
 
+      <% } %>
+  
+    </div>
   </div>
-</div>
-<% } %>
+  <% } %>
+
+
 
 <% if (dupMessage.length > 0) { %>
   <div class="alert alert-primary" role="alert">
@@ -129,8 +243,6 @@
 
 </div>
 <% } %> 
-
-
 
 
 
