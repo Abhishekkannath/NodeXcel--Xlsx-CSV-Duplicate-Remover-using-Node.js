@@ -2,7 +2,7 @@ document.addEventListener("DOMContentLoaded", function () {
   const btnRemove = document.getElementById("btn_remove");
   
   btnRemove.addEventListener("click", () => {
-    // Send a request to the Node.js route
+    // Send a request to the Node.js route.
     
     
 
