@@ -47,17 +47,14 @@ Install Node.js from [nodejs.org](https://nodejs.org/).
 
 Navigate to the project root directory and run:
 
+1. Prepare your files as described in the Detailed Setup section.
+2. Clone this repository.
+3. Navigate to the project root directory and run the following commands:
+
 ```bash
 npm install
 npm run dev
 
-
-1. Prepare your files as described in the Detailed Setup section.
-2. Clone this repository.
-3. Navigate to the project root directory and run the following commands:
-   ```bash
-   npm install
-   npm run dev
 
 Open your web browser and go to: [http://localhost:5000/](http://localhost:5000/)
 
