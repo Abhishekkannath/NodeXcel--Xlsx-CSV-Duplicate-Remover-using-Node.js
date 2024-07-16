@@ -105,7 +105,7 @@ rl.on("close", () => {
   iscsv=true;
 });
 
-  // console.log("Total rows: ", rowCount);
+  console.log("Total rows: ", rowCount);
 
   req.flash("success", "CSV File uploaded successfully");
   res.redirect("/");
@@ -234,8 +234,9 @@ if (err) {
   const mergedDataB = [];
 
   for (const row of dataB) {
-    console.log(Unique_2);
+    
     const phone = row[Unique_2];
+    console.log(phone);
 
     if (!uniquePhonesB.has(phone)) {
       uniquePhonesB.add(phone);
