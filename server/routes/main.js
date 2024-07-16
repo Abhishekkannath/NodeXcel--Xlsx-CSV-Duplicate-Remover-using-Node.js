@@ -186,7 +186,7 @@ const removeDups = () => {
     } else {
       // Find the existing row with the same phone and merge names
       const existingRowIndex = mergedDataA.findIndex((r) => r[Unique_1] === phone);
-      mergedDataA[existingRowIndex][Merge_1] += " and " + row[Merge_1];
+      mergedDataA[existingRowIndex][Merge_1] += ", " + row[Merge_1];
     }
   }
 
@@ -234,8 +234,8 @@ if (err) {
   const mergedDataB = [];
 
   for (const row of dataB) {
-    console.log(Unique2);
-    const phone = row[Unique2];
+    console.log(Unique_2);
+    const phone = row[Unique_2];
 
     if (!uniquePhonesB.has(phone)) {
       uniquePhonesB.add(phone);
@@ -243,7 +243,7 @@ if (err) {
     } else {
       // Find the existing row with the same phone and merge names
       const existingRowIndex = mergedDataB.findIndex((r) => r[Unique_2] === phone);
-      mergedDataB[existingRowIndex][Merge_2] += " and " + row[Merge_2];
+      mergedDataB[existingRowIndex][Merge_2] += ", " + row[Merge_2];
     }
   }
 
