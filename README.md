@@ -1,12 +1,14 @@
-# Bank Reconciliation and Data Deduplication Tool
+# Node.js Excel CSV Duplicate Remover
 
-This web application automates the reconciliation process between your bank records and your account book records. It identifies and removes duplicate entries, streamlining the end-of-month reconciliation process.
+## Overview
+The Node.js Excel CSV Duplicate Remover is a versatile tool designed to efficiently remove duplicate entries from CSV files while offering customizable merge strategies.
 
 ## Features
-
-- **Automated Reconciliation**: Compares and matches entries between bank records and account book records.
-- **Data Deduplication**: Eliminates duplicate records from your files.
-- **File Merging**: Combines results and outputs in Excel or CSV format.
+- **Duplicate Removal:** Remove duplicate rows based on specified unique identifiers.
+- **Merge Options:** Merge duplicate entries using flexible strategies.
+- **Node.js Powered:** Built using Node.js for performance and cross-platform compatibility.
+- **Configurability:** Customize unique and merge criteria through configuration files.
+- **Scalability:** Handles large datasets efficiently.
 
 ## Prerequisites
 
@@ -26,20 +28,19 @@ Open your web browser and visit: [http://localhost:5000/](http://localhost:5000/
 
 Create an Excel file for your bank records with the following structure:
 
-| Sr | Cheque | Dr  | Cr   |
+| Sr | Phone  | Dr  | Due  |
 |----|--------|-----|------|
-| 1  | 123    | 5000|      |
-| 2  | 4567   | 9000|      |
-| 3  |        |     |-9345|
+| 1  | 1233   | 5000| 3233 |
+| 2  | 4567   | 9000| 423  |
+| 3  | 1233   |     |-9345 |
 
 Create an Excel file for your account book records with the following structure:
 
-| Sr | Cheque | Dr  | Cr   |
-|----|--------|-----|------|
-| 1  | 123    | 5000|      |
-| 2  | 4567   | 9000|      |
-| 3  |        |     |-9345|
-| 4  | 34637  | 8000|      |
+| Sr | Phone  | Dr  | Due        |
+|----|--------|-----|------------|
+| 1  | 1233   | 5000| 3233, 9345 |
+| 2  | 4567   | 9000| 423        |
+|    |        |     |            |
 
 Clone this repository.
 
@@ -60,7 +61,7 @@ Open your web browser and go to: [http://localhost:5000/](http://localhost:5000/
 
 **Output:**
 
-After running the tool, the resulting file will have duplicate entries removed from both the bank records and account book records, leaving you with unique records for manual reconciliation.
+After running the tool, the resulting file will remove duplicate entries from the records, leaving you with unique records.
 
 **Important Notes:**
 
@@ -78,4 +79,6 @@ After running the tool, the resulting file will have duplicate entries removed f
 **Support:**
 
 If you find this project useful, consider buying me a coffee:
+
+https://github.com/Abhishekkannath/
 
