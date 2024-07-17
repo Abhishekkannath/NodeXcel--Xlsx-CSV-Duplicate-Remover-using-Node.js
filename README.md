@@ -52,9 +52,9 @@ Navigate to the project root directory and run:
 2. Clone this repository.
 3. Navigate to the project root directory and run the following commands:
 
-```bash
-npm install
-npm run dev
+
+`npm install`
+`npm run dev`
 
 
 Open your web browser and go to: [http://localhost:5000/](http://localhost:5000/)
