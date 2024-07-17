@@ -32,7 +32,7 @@ Create an Excel file for your bank records with the following structure:
 |----|--------|-----|------|
 | 1  | 1233   | 5000| 3233 |
 | 2  | 4567   | 9000| 423  |
-| 3  | 1233   |     |-9345 |
+| 3  | 1233   |     | 9345 |
 
 Create an Excel file for your account book records with the following structure:
 
