@@ -5,7 +5,7 @@ const flash = require("connect-flash");
 const expressLayout = require("express-ejs-layouts");
 
 const app = express();
-const PORT = process.env.PORT || 5000 ;
+const PORT = 5000 || process.env.PORT;
 
 app.use(express.static("public"));
 
