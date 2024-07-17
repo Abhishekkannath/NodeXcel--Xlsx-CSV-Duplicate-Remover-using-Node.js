@@ -17,6 +17,7 @@ app.use(
     saveUninitialized: true,
   })
 );
+
 app.use(flash());
 
 app.use(express.urlencoded({ extended: true }));
