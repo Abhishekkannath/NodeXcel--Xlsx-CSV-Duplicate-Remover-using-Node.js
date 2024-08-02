@@ -1,7 +1,7 @@
 # Node.js Excel CSV Duplicate Remover
 
 ## Overview
-The Node.js Excel CSV Duplicate Remover is a versatile tool designed to efficiently remove duplicate entries from CSV files while offering customizable merge strategies.
+The Node.js Xlsx CSV Duplicate Remover is a versatile tool designed to efficiently remove duplicate entries from CSV files while offering customizable merge strategies.
 
 ## Features
 - **Duplicate Removal:** Remove duplicate rows based on specified unique identifiers.
